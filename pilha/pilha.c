@@ -9,6 +9,12 @@ struct node {
 };
 typedef struct node Node;
 
+// Struct principal da pilha
+struct pilha {
+    struct node* topo;
+    int qtd;
+};
+
 // Cria a pilha, alocando memória, aterrando o topo e inicializando o contador
 Pilha Pcria() {
     Pilha p = (Pilha) malloc(sizeof(struct pilha));

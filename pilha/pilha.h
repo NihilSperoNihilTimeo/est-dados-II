@@ -1,11 +1,8 @@
 #ifndef PILHA_H
 #define PILHA_H
 
-// Struct principal da pilha
-struct pilha {
-    struct node* topo;
-    int qtd;
-};
+// Structs 
+struct pilha;
 typedef struct pilha* Pilha;
 
 // Cria uma pilha vazia
