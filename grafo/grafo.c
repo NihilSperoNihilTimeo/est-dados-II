@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "grafo.h"
+#include "../lista/lista.h"
 
 struct vertice {
     Lista listaIncidencia;
