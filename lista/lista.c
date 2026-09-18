@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include "lista.h"
+
 typedef struct no {
     void *dado;
     struct no *ant;
@@ -10,16 +13,16 @@ struct lista {
     int qtd;
 };
 
- Lista Lcria(){
-     Lista l = (Lista) malloc(sizeof(struct lista));
+Lista Lcria(){
+    Lista l = (Lista) malloc(sizeof(struct lista));
 
-     if ( l != NULL ){
+    if ( l != NULL ){
         l->inicio = NULL;
         l->fim = NULL;
         l->qtd = 0;
-     }
+    }
 
-      return l; 
+    return l; 
  }
 
   void Ldestroi( Lista l){
@@ -37,7 +40,7 @@ struct lista {
     }
   }
 
-  int Lvazia(Lista l){
+int Lvazia(Lista l){
     if (l == NULL){
         return 1;
 }
@@ -48,11 +51,11 @@ struct lista {
     return 0 ;
   }
 
-  int Lcheia (Lista l){
+int Lcheia (Lista l){
     return 0;
   }
 
-  int Ltamanho (Lista l){
+int Ltamanho (Lista l){
      if (l == NULL){
         return 0;
     }

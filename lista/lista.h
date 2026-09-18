@@ -15,4 +15,3 @@ int Lcheia(Lista l);
 int Ltamanho(Lista l);
 
 #endif
-
