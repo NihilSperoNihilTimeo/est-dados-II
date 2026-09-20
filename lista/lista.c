@@ -38,27 +38,27 @@ Lista Lcria(){
 
         free(l);
     }
-  }
+}
 
 int Lvazia(Lista l){
     if (l == NULL){
         return 1;
-}
+    }
     if (l->qtd == 0){
         return 1;
     }
 
-    return 0 ;
-  }
+   return 0 ;
+}
 
 int Lcheia (Lista l){
     return 0;
-  }
+}
 
 int Ltamanho (Lista l){
-     if (l == NULL){
+    if (l == NULL){
         return 0;
     }
 
     return l->qtd;
-  }
+}
