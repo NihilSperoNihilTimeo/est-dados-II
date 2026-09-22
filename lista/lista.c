@@ -152,7 +152,6 @@ int Lremove(Lista l, void* dado) {
         l->fim = no->ant;
     }
 
-    
     free(no);
     l->qtd--;
 

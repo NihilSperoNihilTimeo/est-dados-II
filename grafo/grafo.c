@@ -72,7 +72,7 @@ Grafo GGcriaGrafo(int v, int e) {
     return g;
 }
 
-void* GGdestroiGrafo(Grafo g) {
+void GGdestroiGrafo(Grafo g) {
     if (g == NULL) {
         return; 
     }
@@ -314,3 +314,80 @@ int GBsalvaGrafo(Grafo g, const char *nomeArquivo) {
 }
 
 // Funções relacionadas aos vértices do grafo
+int GIpegaGrau(Grafo g, int vertice) {
+    if (g->vertices[vertice].listaIncidencia) {
+        return Ltamanho(g->vertices[vertice].listaIncidencia);
+    }
+
+    return 0;
+}
+
+int GAprimaAresta(Grafo g, int vertice) {
+    if (g->vertices[vertice].listaIncidencia != NULL) {     
+        return GAproxAresta(g, vertice, 0);
+    }
+
+    return 0;
+}
+
+int GAproxAresta(Grafo g, int vertice, int aresta) {
+    if (g->vertices[vertice].listaIncidencia != NULL) {
+        int tamanho = Ltamanho(g->vertices[vertice].listaIncidencia);
+
+        if (tamanho > 0) {
+            int proxAresta = 0;
+            int minAbs = -1; 
+            int absRef = abs(aresta); 
+
+            for (int i = 1; i <= tamanho; i++) {
+                void* ptr = Lexamina(g->vertices[vertice].listaIncidencia, i);
+
+                if (ptr != NULL) {
+                    int arestaAtual = *(int*)ptr;
+                    int absAtual = abs(arestaAtual); 
+        
+                    if (absAtual > absRef) {
+                        if (minAbs == -1 || absAtual < minAbs) {
+                            minAbs = absAtual;
+                            proxAresta = arestaAtual; 
+                        }
+                    }
+                }
+            }
+            return proxAresta; 
+        }
+    }
+    
+    return 0;
+}
+
+int GAprimaEntrada(Grafo g, int vertice) {
+    if (g->vertices[vertice].listaIncidencia != NULL) {
+        int tamanho = Ltamanho(g->vertices[vertice].listaIncidencia);
+
+        if (tamanho > 0) {
+            int minAresta = -1;
+
+            for (int i = 1; i <= tamanho; i++) {
+                void* ptr = Lexamina(g->vertices[vertice].listaIncidencia, i);
+
+                if (ptr != NULL) {
+                    int arestaAtual = *(int*)ptr;
+        
+                    if (arestaAtual > 0) {
+                        if (minAresta == -1 || arestaAtual < minAresta) {
+                            minAresta  = arestaAtual;
+                        }
+                    }
+                }
+            }
+            return minAresta; 
+        }
+    }
+    
+    return 0;
+}
+
+int GAproxEntrada(Grafo g, int vertice, int aresta) {
+    
+}
