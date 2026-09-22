@@ -24,7 +24,7 @@ struct grafo {
     Aresta arestas;
 };
 
-// Operações relacionadas ao grafo
+// Funções auxiliares para tornar o código mais limpo
 void  incrementaContadorVertices(Grafo g) {
     void* dado = Lexamina(g->vertices[0].listaIncidencia, 1);
     if (dado) {
@@ -33,6 +33,11 @@ void  incrementaContadorVertices(Grafo g) {
     }
 }
 
+void pulaLinha(FILE *f) {
+    while (fgetc(f) != '\n' && !feof(f));
+}
+
+// Operações relacionadas ao grafo
 Grafo GGcriaGrafo(int v, int e) {
     if (v <= 0 || e <= 0) {
         return NULL;
@@ -234,13 +239,50 @@ int GInumeroArestaMax(Grafo g) {
 }
 
 Grafo GGcarregaGrafo(const char *nomeArquivo) {
-      FILE *f = fopen(nomeArquivo, "r");
-      if (f) {
-        //...
-      }
+    FILE *f = fopen(nomeArquivo, "r");
+    int numVertices;
+    int numArestas;
 
+    if (f) {
+        pulaLinha(f);
+        pulaLinha(f);
+        if (fscanf(f, " \t#nvMax %d", &numVertices) != 1) {
+            fclose(f);
+            return NULL;
+        }   
+        if (fscanf(f, " \t#naMax %d", &numArestas) != 1) {
+            fclose(f);
+            return NULL;
+        }
 
+        Grafo g = GGcriaGrafo(numVertices, numArestas);
+
+        if (g) {
+            int ver;
+            while (fscanf(f, " \t%d;", &ver) == 1) {
+                if (GVcriaVertice(g) == 0) {
+                    fclose(f);
+                    GGdestroiGrafo(g);
+                    return NULL;
+                }
+            }
+
+            int v1, v2;    
+            while (fscanf(f, " \t%d -- %d;", &v1, &v2) == 2) {
+                if (GAcriaAresta(g, v1, v2) == 0) {
+                    fclose(f);
+                    GGdestroiGrafo(g);
+                    return NULL;
+                }
+            }
+
+        }      
+        fclose(f);
+        return g;
+    }
+    return NULL;
 }
+
 
 int GBsalvaGrafo(Grafo g, const char *nomeArquivo) {
     FILE *f = fopen(nomeArquivo, "w");
@@ -257,7 +299,7 @@ int GBsalvaGrafo(Grafo g, const char *nomeArquivo) {
 
        for (int i = 1; i <=g->naMax; i++) {
             if (g->arestas[i].alfa) {
-                fprintf(f, "\t%d -- %d\n", g->arestas[i].alfa, g->arestas[i].omega);
+                fprintf(f, "\t%d -- %d;\n", g->arestas[i].alfa, g->arestas[i].omega);
             }
        }
 
