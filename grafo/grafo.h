@@ -10,7 +10,4 @@ Grafo GGcriaGrafo(int v, int e);
 
 void* GGdestroiGrafo(Grafo g) ;
 
-
-
-
 #endif

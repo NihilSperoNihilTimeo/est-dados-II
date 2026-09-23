@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "grafo.h"
@@ -71,4 +70,8 @@ void* GGdestroiGrafo(Grafo g) {
     }
 
     free(g);
+}
+
+int GVcriaVertice(Grafo g) {
+    g->vertices->livre[0];
 }

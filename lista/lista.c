@@ -98,7 +98,7 @@ int Llocaliza(Lista l, void *elemento) {
 
     return -1;
 }
- 
+
 void Linsere(Lista l, void *elemento, int posicao) {
     if (l == NULL) {
         return;
@@ -114,25 +114,21 @@ void Linsere(Lista l, void *elemento, int posicao) {
     novo->dado = elemento;
 
     if (l->qtd == 0) {
-        /* lista vazia: novo é o único nó */
         novo->ant = NULL;
         novo->prox = NULL;
         l->inicio = novo;
         l->fim = novo;
     } else if (posicao == 0) {
-        /* insere no início */
         novo->ant = NULL;
         novo->prox = l->inicio;
         l->inicio->ant = novo;
         l->inicio = novo;
     } else if (posicao == l->qtd) {
-        /* insere no fim */
         novo->prox = NULL;
         novo->ant = l->fim;
         l->fim->prox = novo;
         l->fim = novo;
     } else {
-        /* insere no meio: encontra o nó que hoje ocupa "posicao" */
         No *atual = l->inicio;
         for (int i = 0; i < posicao; i++) {
             atual = atual->prox;

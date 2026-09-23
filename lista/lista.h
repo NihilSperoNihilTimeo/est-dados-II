@@ -23,4 +23,3 @@ void Linsere(Lista l, void* elemento, int posicao);
 void* Lremove(Lista l, int posicao);
 
 #endif
-
