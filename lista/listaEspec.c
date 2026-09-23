@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "lista.h"
+#include "listaEspec.h"
 
 typedef struct no {
     void *dado;
