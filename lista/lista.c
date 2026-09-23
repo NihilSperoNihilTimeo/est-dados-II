@@ -63,114 +63,97 @@ int Ltamanho(Lista l) {
     return l->qtd;
 }
 
-void* Lexamina(Lista l, int posicao) {
-    if (l == NULL) {
+int Lexamina(Lista l, int pos) {
+    if (l == NULL || pos <= 0) {
         return NULL;
     }
-    if (posicao < 0 || posicao >= l->qtd) {
-        return NULL;
-    }
-
-    No *atual = l->inicio;
-
-    for (int i = 0; i < posicao; i++) {
-        atual = atual->prox;
-    }
-
-    return atual->dado;
-}
-
-int Llocaliza(Lista l, void *elemento) {
-    if (l == NULL) {
-        return -1;
-    }
-
-    No *atual = l->inicio;
-    int i = 0;
-
-    while (atual != NULL) {
-        if (atual->dado == elemento) {
-            return i;
-        }
-        atual = atual->prox;
+    No *no = l->inicio;
+    int i = 1;
+    while (no != NULL && i < pos) {
+        no = no->prox;
         i++;
     }
 
-    return -1;
+    if (no == NULL) {
+        return 0;
+    } else {
+        return no->dado;
+    }
+
 }
 
-void Linsere(Lista l, void *elemento, int posicao) {
+int Llocaliza(Lista l, void* dado) {
     if (l == NULL) {
-        return;
+        return 0;
     }
-    if (posicao < 0 || posicao > l->qtd) {
-        return;
+    No *no = l->inicio;
+    int i = 1;
+    while (no != NULL && no->dado != dado) {
+        no = no->prox;
+        i++;
     }
 
-    No *novo = (No *) malloc(sizeof(No));
-    if (novo == NULL) {
-        return;
-    }
-    novo->dado = elemento;
-
-    if (l->qtd == 0) {
-        novo->ant = NULL;
-        novo->prox = NULL;
-        l->inicio = novo;
-        l->fim = novo;
-    } else if (posicao == 0) {
-        novo->ant = NULL;
-        novo->prox = l->inicio;
-        l->inicio->ant = novo;
-        l->inicio = novo;
-    } else if (posicao == l->qtd) {
-        novo->prox = NULL;
-        novo->ant = l->fim;
-        l->fim->prox = novo;
-        l->fim = novo;
+    if (no == NULL) {
+        return 0;
     } else {
-        No *atual = l->inicio;
-        for (int i = 0; i < posicao; i++) {
-            atual = atual->prox;
-        }
-        novo->prox = atual;
-        novo->ant = atual->ant;
-        atual->ant->prox = novo;
-        atual->ant = novo;
+        return i;
+    }
+}
+
+int Linsere(Lista l, void* dado) {
+    if (l == NULL) {
+        return 0;
+    }
+    
+    No *no;
+    no =  (No*) malloc(sizeof(No));
+    if (no == NULL) {
+        return NULL;
+    }
+    
+    no->dado = dado;
+    no->prox = NULL;
+    if (l->inicio == NULL) {
+        l->inicio = no;
+        no->ant = NULL;
+    } else {
+        l->fim->prox = no;
+        no->ant = l->fim;
     }
 
+    l->fim = no;
     l->qtd++;
+    return 1;
 }
 
-void* Lremove(Lista l, int posicao) {
+int Lremove(Lista l, void* dado) {
     if (l == NULL) {
         return NULL;
     }
-    if (posicao < 0 || posicao >= l->qtd) {
+    if (l->fim == NULL) {
         return NULL;
     }
-
-    No *atual = l->inicio;
-    for (int i = 0; i < posicao; i++) {
-        atual = atual->prox;
+    No *no = l->inicio;
+    while (no != NULL && no->dado != dado) {
+        no = no->prox;
     }
-
-    void *dado = atual->dado;
-
-    if (atual->ant != NULL) {
-        atual->ant->prox = atual->prox;
+    if (no == NULL) {
+        return 0;
+    }
+    if (no->ant == NULL) {
+        l->inicio = no->prox;
     } else {
-        l->inicio = atual->prox;
+        no->ant->prox = no->prox;
     }
 
-    if (atual->prox != NULL) {
-        atual->prox->ant = atual->ant;
+    if (no->prox != NULL) {
+        no->prox->ant = no->ant;
     } else {
-        l->fim = atual->ant;
+        l->fim = no->ant;
     }
 
-    free(atual);
+    free(no);
     l->qtd--;
 
-    return dado;
+    return 1;
 }

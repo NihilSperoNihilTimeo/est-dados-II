@@ -14,12 +14,12 @@ int Lcheia(Lista l);
 
 int Ltamanho(Lista l);
 
-void* Lexamina(Lista l, int posicao);
- 
-int Llocaliza(Lista l, void* elemento);
+void* Lexamina(Lista l, int pos);
 
-void Linsere(Lista l, void* elemento, int posicao);
+int Llocaliza(Lista l, void* dado);
 
-void* Lremove(Lista l, int posicao);
+int Linsere(Lista l, void* dado);
+
+int Lremove(Lista l, void* dado) ;
 
 #endif
