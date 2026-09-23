@@ -13,24 +13,24 @@ struct lista {
     int qtd;
 };
 
-Lista Lcria(){
+Lista Lcria() {
     Lista l = (Lista) malloc(sizeof(struct lista));
 
-    if ( l != NULL ){
+    if (l != NULL) {
         l->inicio = NULL;
         l->fim = NULL;
         l->qtd = 0;
     }
 
-    return l; 
- }
+    return l;
+}
 
-  void Ldestroi( Lista l){
-    if ( l != NULL){
-        No* atual = l->inicio;
-        No* prox;
+void Ldestroi(Lista l) {
+    if (l != NULL) {
+        No *atual = l->inicio;
+        No *prox;
 
-        while (atual != NULL){
+        while (atual != NULL) {
             prox = atual->prox;
             free(atual);
             atual = prox;
@@ -40,23 +40,23 @@ Lista Lcria(){
     }
 }
 
-int Lvazia(Lista l){
-    if (l == NULL){
+int Lvazia(Lista l) {
+    if (l == NULL) {
         return 1;
     }
-    if (l->qtd == 0){
+    if (l->qtd == 0) {
         return 1;
     }
 
-   return 0 ;
-}
-
-int Lcheia (Lista l){
     return 0;
 }
 
-int Ltamanho (Lista l){
-    if (l == NULL){
+int Lcheia(Lista l) {
+    return 0;
+}
+
+int Ltamanho(Lista l) {
+    if (l == NULL) {
         return 0;
     }
 
