@@ -51,6 +51,7 @@ int Fvazia(Fila f) {
 }
 
 int Fcheia(Fila f) {
+    (void)f;
     return 0;
 }
 

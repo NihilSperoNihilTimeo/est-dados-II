@@ -37,14 +37,35 @@ void pulaLinha(FILE *f) {
     while (fgetc(f) != '\n' && !feof(f));
 }
 
+  // dirigido = 1 -> digraph + "->"; 0 -> graph + "--" */
+int GBexportaDot(Grafo g, const char *nome, int dirigido) {
+      FILE *f = fopen(nome, "w");
+      
+      if (!f) return 0;
+      
+      fprintf(f, "%s g {\n", dirigido ? "digraph" : "graph");
+      
+      for (int v = GVprimeiroVertice(g); v; v = GVproximoVertice(g, v))
+          fprintf(f, "  %d;\n", v);
+      
+      const char *op = dirigido ? "->" : "--";
+      for (int a = GAprimeiraAresta(g); a; a = GAproximaAresta(g, a))
+          fprintf(f, "  %d %s %d;\n", GValfa(g, a), op, GVomega(g, a));
+    
+          fprintf(f, "}\n");
+          
+    fclose(f);
+    return 1;
+}
+
 // Operações relacionadas ao grafo
 Grafo GGcriaGrafo(int v, int e) {
     if (v <= 0 || e <= 0) {
         return NULL;
     }
 
-    Vertice vetVertice = (Vertice) malloc((v + 1)*sizeof(Aresta));
-    Aresta vetAresta =   (Aresta)  malloc((e + 1)*sizeof(Aresta));
+    Vertice vetVertice = (Vertice) malloc((v + 1)*sizeof(struct vertice));
+    Aresta vetAresta =   (Aresta)  malloc((e + 1)*sizeof(struct aresta));
 
     Grafo g = (Grafo) malloc(sizeof(struct grafo)); 
 
@@ -55,8 +76,10 @@ Grafo GGcriaGrafo(int v, int e) {
 
     for (int i = 0; i < v; i++) {
         g->vertices[i].livre = i + 1;
+        g->vertices[i].listaIncidencia = NULL;
     }
     g->vertices[v].livre = 0;
+    g->vertices[v].listaIncidencia = NULL;
 
     g->vertices[0].listaIncidencia = Lcria();
     int* contadorInicial = (int*) malloc(sizeof(int));
@@ -66,7 +89,8 @@ Grafo GGcriaGrafo(int v, int e) {
     for (int i = 0; i < e; i++) {
         g->arestas[i].omega = i + 1;
     }
-    g->arestas[e].alfa = 0;
+    g->arestas[e].omega = 0;
+    
     g->arestas[0].alfa = 0;
 
     return g;
@@ -78,8 +102,8 @@ void GGdestroiGrafo(Grafo g) {
     }
 
     if (g->vertices) {   
-        for (int i = 0; i < g->nvMax; i++) {
-            if (g->vertices[i].listaIncidencia != NULL) {
+        for (int i = 0; i <= g->nvMax; i++) {
+            if (g->vertices[i].listaIncidencia) {
                 Ldestroi(g->vertices[i].listaIncidencia); 
             }
         }    
@@ -94,23 +118,26 @@ void GGdestroiGrafo(Grafo g) {
 }
 
 int GVcriaVertice(Grafo g) {
-   if (g->vertices[0].livre != 0 && g->vertices[0].listaIncidencia <= g->nvMax) {
-
-        int qualLivre = g->vertices[0].livre;
-        int proxLivre = g->vertices[qualLivre].livre;
-
-        g->vertices[qualLivre].listaIncidencia = Lcria;
-        incrementaContadorVertices(g);
-        g->vertices[0].livre = proxLivre;
+   if (g->vertices[0].livre != 0 && g->vertices[0].listaIncidencia != NULL) {
+        void* ptr =  Lexamina(g->vertices[0].listaIncidencia, 1);
         
-        return qualLivre;
-   }
+        if (ptr != NULL && *(int*)ptr <= g->nvMax) {
+            int qualLivre = g->vertices[0].livre;
+            int proxLivre = g->vertices[qualLivre].livre;
+
+            g->vertices[qualLivre].listaIncidencia = Lcria();
+            incrementaContadorVertices(g);
+            g->vertices[0].livre = proxLivre;
+            
+            return qualLivre;
+        }
+    }
 
    return 0;
 }
  
 int GAcriaAresta(Grafo g, int v1, int v2) {
-    if (g->arestas[0].omega != 0 && g->arestas[0].alfa <= g->naMax) {
+    if (g->arestas[0].omega != 0 && g->arestas[0].alfa < g->naMax) {
         if (g->vertices[v1].listaIncidencia != NULL && g->vertices[v2].listaIncidencia != NULL) {
             
             int qualLivre = g->arestas[0].omega;
@@ -119,13 +146,13 @@ int GAcriaAresta(Grafo g, int v1, int v2) {
             g->arestas[qualLivre].alfa = v1;
             
             int* alfa = (int*) malloc(sizeof(int));
-            *alfa = -v1;
+            *alfa = -qualLivre;
             Linsere(g->vertices[v1].listaIncidencia, alfa);
 
             g->arestas[qualLivre].omega = v2;
 
             int* omega = (int*) malloc(sizeof(int));
-            *omega = +v2;
+            *omega = +qualLivre;
             Linsere(g->vertices[v2].listaIncidencia, omega);
 
             g->arestas[0].alfa++;
@@ -164,9 +191,13 @@ int GBexisteArestaDir(Grafo g, int v1, int v2) {
     return 0;
 }
 
-int GBexisteAresta(Grafo g, int aresta) {
-    if (g->arestas[aresta].alfa != 0) {
-        return 1;
+int GBexisteAresta(Grafo g, int v1, int v2) {
+    for (int i = 1; i <= g->arestas[0].alfa; i++) {
+        if ((g->arestas[i].alfa == v1 && g->arestas[i].omega == v2) ||
+            (g->arestas[i].alfa == v2 && g->arestas[i].omega == v1) ) {
+                
+                return 1;
+        }
     }
 
     return 0;
@@ -203,7 +234,7 @@ int GVprimeiroVertice(Grafo g) {
 }
 
 int GVproximoVertice(Grafo g, int vertice) {
-    for (int i = vertice; i <= g->nvMax; i++) {
+    for (int i = vertice+1; i <= g->nvMax; i++) {
         if (g->vertices[i].listaIncidencia) {
             return i;
         }
@@ -212,9 +243,19 @@ int GVproximoVertice(Grafo g, int vertice) {
     return 0;
 }
 
+int GAprimeiraAresta(Grafo g) {
+    for (int i = 1; i <= g->naMax; i++) {
+        if (g->arestas[i].alfa) {
+            return i;
+        }
+    }
+
+    return 0;
+}
+
 int GAproximaAresta(Grafo g, int aresta) {
-    for (int i = aresta; i <= g->naMax; i++) {
-        if (g->arestas[i].alfa != 0 || g->arestas[i].alfa != NULL) {
+    for (int i = aresta+1; i <= g->naMax; i++) {
+        if (g->arestas[i].alfa) {
             return i;
         } 
     }
@@ -234,7 +275,7 @@ int GInumeroArestas(Grafo g) {
     return g->arestas[0].alfa;
 }
 
-int GInumeroArestaMax(Grafo g) {
+int GInumeroArestasMax(Grafo g) {
     return g->naMax;
 }
 
@@ -501,5 +542,14 @@ int GVomega(Grafo g, int aresta) {
 }
 
 int GVvizinho(Grafo g, int aresta, int vertice) {
-    
+    if (g->arestas[aresta].alfa) {
+        if (g->arestas[aresta].alfa == vertice) {
+            return g->arestas[aresta].omega;
+        }
+        if (g->arestas[aresta].omega == vertice) {
+            return g->arestas[aresta].alfa;
+        }
+    }
+
+    return 0;
 }

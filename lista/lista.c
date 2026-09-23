@@ -32,6 +32,7 @@ void Ldestroi(Lista l) {
 
         while (atual != NULL) {
             prox = atual->prox;
+            free(atual->dado);
             free(atual);
             atual = prox;
         }
@@ -52,6 +53,7 @@ int Lvazia(Lista l) {
 }
 
 int Lcheia(Lista l) {
+    (void)l;
     return 0;
 }
 
@@ -63,7 +65,7 @@ int Ltamanho(Lista l) {
     return l->qtd;
 }
 
-int Lexamina(Lista l, int pos) {
+void* Lexamina(Lista l, int pos) {
     if (l == NULL || pos <= 0) {
         return NULL;
     }
@@ -107,8 +109,9 @@ int Linsere(Lista l, void* dado) {
     
     No *no;
     no =  (No*) malloc(sizeof(No));
+
     if (no == NULL) {
-        return NULL;
+        return 0;
     }
     
     no->dado = dado;
@@ -128,10 +131,10 @@ int Linsere(Lista l, void* dado) {
 
 int Lremove(Lista l, void* dado) {
     if (l == NULL) {
-        return NULL;
+        return 0;
     }
     if (l->fim == NULL) {
-        return NULL;
+        return 0;
     }
     No *no = l->inicio;
     while (no != NULL && no->dado != dado) {

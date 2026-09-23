@@ -56,6 +56,7 @@ int Pvazia(Pilha p) {
 
 // Uma pilha dinâmica somente ficará cheia se não houver mais espaço na memória
 int Pcheia(Pilha p) {
+    (void)p;
     return 0;
 }
 
