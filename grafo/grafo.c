@@ -336,7 +336,7 @@ int GAproxAresta(Grafo g, int vertice, int aresta) {
 
         if (tamanho > 0) {
             int proxAresta = 0;
-            int minAbs = -1; 
+            int minAbs = 0; 
             int absRef = abs(aresta); 
 
             for (int i = 1; i <= tamanho; i++) {
@@ -345,16 +345,16 @@ int GAproxAresta(Grafo g, int vertice, int aresta) {
                 if (ptr != NULL) {
                     int arestaAtual = *(int*)ptr;
                     int absAtual = abs(arestaAtual); 
-        
+
                     if (absAtual > absRef) {
-                        if (minAbs == -1 || absAtual < minAbs) {
+                        if (minAbs == 0 || absAtual < minAbs) {
                             minAbs = absAtual;
                             proxAresta = arestaAtual; 
                         }
                     }
                 }
             }
-            return proxAresta; 
+            return abs(proxAresta); 
         }
     }
     
@@ -366,22 +366,22 @@ int GAprimaEntrada(Grafo g, int vertice) {
         int tamanho = Ltamanho(g->vertices[vertice].listaIncidencia);
 
         if (tamanho > 0) {
-            int minAresta = -1;
+            int minAresta = 0;
 
             for (int i = 1; i <= tamanho; i++) {
                 void* ptr = Lexamina(g->vertices[vertice].listaIncidencia, i);
 
                 if (ptr != NULL) {
                     int arestaAtual = *(int*)ptr;
-        
+
                     if (arestaAtual > 0) {
-                        if (minAresta == -1 || arestaAtual < minAresta) {
+                        if (minAresta == 0 || arestaAtual < minAresta) {
                             minAresta  = arestaAtual;
                         }
                     }
                 }
             }
-            return minAresta; 
+            return abs(minAresta); 
         }
     }
     
@@ -389,5 +389,117 @@ int GAprimaEntrada(Grafo g, int vertice) {
 }
 
 int GAproxEntrada(Grafo g, int vertice, int aresta) {
+    if (g->vertices[vertice].listaIncidencia != NULL) {
+        int tamanho = Ltamanho(g->vertices[vertice].listaIncidencia);
+
+        if (tamanho > 0) {
+            int minAresta = 0;
+
+            for (int i = 1; i <= tamanho; i++) {
+                void* ptr = Lexamina(g->vertices[vertice].listaIncidencia, i);
+
+                if (ptr != NULL) {
+                    int arestaAtual = *(int*)ptr;
+
+                    if (arestaAtual > 0 && arestaAtual > aresta) {
+                        if (minAresta == 0 || arestaAtual < minAresta) {
+                            minAresta  = arestaAtual;
+                        }
+                    }
+                }
+            }
+            return abs(minAresta); 
+        }
+    }
+    
+    return 0;
+}
+
+int GAprimaSaida(Grafo g, int vertice) {
+    if (g->vertices[vertice].listaIncidencia != NULL) {
+        int tamanho = Ltamanho(g->vertices[vertice].listaIncidencia);
+
+        if (tamanho > 0) {
+            int minAresta = 0;
+
+            for (int i = 1; i <= tamanho; i++) {
+                void* ptr = Lexamina(g->vertices[vertice].listaIncidencia, i);
+
+                if (ptr != NULL) {
+                    int arestaAtual = *(int*)ptr;
+
+                    if (arestaAtual < 0) {
+                        if (minAresta == 0 || arestaAtual > minAresta) {
+                            minAresta  = arestaAtual;
+                        }
+                    }
+                }
+            }
+            return abs(minAresta); 
+        }
+    }
+    
+    return 0;
+}
+
+int GAproxSaida(Grafo g, int vertice, int aresta) {
+    if (g->vertices[vertice].listaIncidencia != NULL) {
+        int tamanho = Ltamanho(g->vertices[vertice].listaIncidencia);
+
+        if (tamanho > 0) {
+            int minAresta = 0;
+
+            for (int i = 1; i <= tamanho; i++) {
+                void* ptr = Lexamina(g->vertices[vertice].listaIncidencia, i);
+
+                if (ptr != NULL) {
+                    int arestaAtual = *(int*)ptr;
+
+                    if (arestaAtual < 0 && abs(arestaAtual) > aresta) {
+                        if (minAresta == 0 || arestaAtual > minAresta) {
+                            minAresta  = arestaAtual;
+                        }
+                    }
+                }
+            }
+            return abs(minAresta); 
+        }
+    }
+    
+    return 0;    
+}
+
+// Operações relacionadas às arestas do grafo
+int GBarestaLaco(Grafo g, int aresta) {
+    if (g->arestas[aresta].alfa) {
+        if (g->arestas[aresta].alfa == g->arestas[aresta].omega) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+int GValfa(Grafo g, int aresta) {
+    int alfa = g->arestas[aresta].alfa;
+
+    if (alfa) {
+        return alfa;
+    }
+
+    return 0;
+}
+
+int GVomega(Grafo g, int aresta) {
+    int omega = g->arestas[aresta].omega;
+    
+    if (omega) {
+        return omega;
+    }
+
+    return 0;
+}
+
+int GVvizinho(Grafo g, int aresta, int vertice) {
     
 }
