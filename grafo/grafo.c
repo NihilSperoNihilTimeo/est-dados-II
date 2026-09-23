@@ -37,22 +37,24 @@ void pulaLinha(FILE *f) {
     while (fgetc(f) != '\n' && !feof(f));
 }
 
-  // dirigido = 1 -> digraph + "->"; 0 -> graph + "--" */
+  // dirigido = 1: digraph + "->"; 0: graph + "--"
 int GBexportaDot(Grafo g, const char *nome, int dirigido) {
-      FILE *f = fopen(nome, "w");
+    FILE *f = fopen(nome, "w");
       
-      if (!f) return 0;
+    if (!f) return 0;
       
-      fprintf(f, "%s g {\n", dirigido ? "digraph" : "graph");
+    fprintf(f, "%s g {\n", dirigido ? "digraph" : "graph");
       
-      for (int v = GVprimeiroVertice(g); v; v = GVproximoVertice(g, v))
-          fprintf(f, "  %d;\n", v);
-      
-      const char *op = dirigido ? "->" : "--";
-      for (int a = GAprimeiraAresta(g); a; a = GAproximaAresta(g, a))
-          fprintf(f, "  %d %s %d;\n", GValfa(g, a), op, GVomega(g, a));
+    for (int v = GVprimeiroVertice(g); v; v = GVproximoVertice(g, v)) {
+        fprintf(f, "  %d;\n", v);
+    }
+       
+    const char *op = dirigido ? "->" : "--";
     
-          fprintf(f, "}\n");
+    for (int a = GAprimeiraAresta(g); a; a = GAproximaAresta(g, a)) {
+        fprintf(f, "  %d %s %d;\n", GValfa(g, a), op, GVomega(g, a));
+    }
+    fprintf(f, "}\n");
           
     fclose(f);
     return 1;
