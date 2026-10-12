@@ -1,3 +1,10 @@
+/*
+    TAD Grafo - Estrutura de dados II
+    
+    Grupo:
+        Rayane Kaylla Venâncio Gomes Alves - 0117243
+        Mateus Otacílio Silva Gomes - 0117242     
+*/  
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -37,7 +44,7 @@ void pulaLinha(FILE *f) {
     while (fgetc(f) != '\n' && !feof(f));
 }
 
-  // dirigido = 1: digraph + "->"; 0: graph + "--"
+// dirigido = 1: digraph + "->"; 0: graph + "--"
 int GBexportaDot(Grafo g, const char *nome, int dirigido) {
     FILE *f = fopen(nome, "w");
       
@@ -52,7 +59,7 @@ int GBexportaDot(Grafo g, const char *nome, int dirigido) {
     const char *op = dirigido ? "->" : "--";
     
     for (int a = GAprimeiraAresta(g); a; a = GAproximaAresta(g, a)) {
-        fprintf(f, "  %d %s %d;\n", GValfa(g, a), op, GVomega(g, a));
+        fprintf(f, "  %d %s %d [label=\"a%d\"];\n", GValfa(g, a), op, GVomega(g, a), a);
     }
     fprintf(f, "}\n");
           
@@ -283,56 +290,71 @@ int GInumeroArestasMax(Grafo g) {
 
 Grafo GGcarregaGrafo(const char *nomeArquivo) {
     FILE *f = fopen(nomeArquivo, "r");
+   
+    if (!f) {
+        return NULL;
+    } 
+
+    pulaLinha(f);
+    pulaLinha(f);
+
     int numVertices;
     int numArestas;
 
-    if (f) {
-        pulaLinha(f);
-        pulaLinha(f);
-        if (fscanf(f, " \t#nvMax %d", &numVertices) != 1) {
+    if (fscanf(f, " \t#nvMax %d", &numVertices) != 1) {
+        fclose(f);
+        return NULL;
+    }   
+    if (fscanf(f, " \t#naMax %d", &numArestas) != 1) {
+        fclose(f);
+        return NULL;
+    }
+
+    Grafo g = GGcriaGrafo(numVertices, numArestas);
+    
+    if (!g) {
+        fclose(f);
+        return NULL;
+    }
+
+    for (int i = 0; i < numVertices; i++) {
+        int ver;
+        if (fscanf(f, " \t%d;", &ver) != 1) {
             fclose(f);
-            return NULL;
-        }   
-        if (fscanf(f, " \t#naMax %d", &numArestas) != 1) {
-            fclose(f);
+            GGdestroiGrafo(g);
             return NULL;
         }
-
-        Grafo g = GGcriaGrafo(numVertices, numArestas);
-
-        if (g) {
-            int ver;
-            while (fscanf(f, " \t%d;", &ver) == 1) {
-                if (GVcriaVertice(g) == 0) {
-                    fclose(f);
-                    GGdestroiGrafo(g);
-                    return NULL;
-                }
-            }
-
-            int v1, v2;    
-            while (fscanf(f, " \t%d -- %d;", &v1, &v2) == 2) {
-                if (GAcriaAresta(g, v1, v2) == 0) {
-                    fclose(f);
-                    GGdestroiGrafo(g);
-                    return NULL;
-                }
-            }
-
-        }      
-        fclose(f);
-        return g;
+        if (GVcriaVertice(g) == 0) {
+            fclose(f);
+            GGdestroiGrafo(g);
+            return NULL;
+        }
     }
-    return NULL;
-}
 
+    for (int i = 0; i < numArestas; i++) {
+        int v1, v2;
+        if (fscanf(f, " \t%d -- %d;", &v1, &v2) != 2) {
+            fclose(f);
+            GGdestroiGrafo(g);
+            return NULL;
+        }
+        if (GAcriaAresta(g, v1, v2) == 0) {
+            fclose(f);
+            GGdestroiGrafo(g);
+            return NULL;
+        }
+    }
+
+    fclose(f);
+    return g;
+}
 
 int GBsalvaGrafo(Grafo g, const char *nomeArquivo) {
     FILE *f = fopen(nomeArquivo, "w");
     if (f) {
        fprintf(f, "graph g \n{\n");
-       fprintf(f, "\t#nvMax %d\n", g->nvMax);
-       fprintf(f, "\t#naMax %d\n", g->naMax);
+       fprintf(f, "\t#nvMax %d\n", GInumeroVertices);
+       fprintf(f, "\t#naMax %d\n", GInumeroArestas);
 
        for (int i = 1; i <=g->nvMax; i++) {
             if (g->vertices[i].listaIncidencia) {
