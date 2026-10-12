@@ -353,8 +353,8 @@ int GBsalvaGrafo(Grafo g, const char *nomeArquivo) {
     FILE *f = fopen(nomeArquivo, "w");
     if (f) {
        fprintf(f, "graph g \n{\n");
-       fprintf(f, "\t#nvMax %d\n", GInumeroVertices);
-       fprintf(f, "\t#naMax %d\n", GInumeroArestas);
+       fprintf(f, "\t#nvMax %d\n", GInumeroVertices(g));
+       fprintf(f, "\t#naMax %d\n", GInumeroArestas(g));
 
        for (int i = 1; i <=g->nvMax; i++) {
             if (g->vertices[i].listaIncidencia) {
