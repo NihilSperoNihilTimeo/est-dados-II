@@ -8,6 +8,6 @@
 void BEL(Grafo g, int inicio);
 
 // Busca em profundidade
-void BEP(Grafo g, int inicio);
+void BEP(Grafo g);
 
 #endif

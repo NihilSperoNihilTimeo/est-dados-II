@@ -13,15 +13,16 @@ OBJ_COMUM = fila/fila.o \
             grafo/grafo.o \
             lista/lista.o \
             pilha/pilha.o \
-            algoritmos/BEL.o
+            algoritmos/BEL.o \
+			algoritmos/BEP.o
 
 # Objetos específicos de cada executável
 OBJ_MAIN = main.o $(OBJ_COMUM)
 OBJ_CRIACAO = criacaoGrafos.o $(OBJ_COMUM)
 
 # Executáveis gerados
-TARGET_MAIN = main.exe
-TARGET_CRIACAO = criacaoGrafos.exe
+TARGET_MAIN = main
+TARGET_CRIACAO = criacaoGrafos
 
 # Declaração de alvos fictícios/virtuais
 .PHONY: all clean

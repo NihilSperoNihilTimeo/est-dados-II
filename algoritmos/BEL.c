@@ -57,6 +57,7 @@ void BEL(Grafo g, int inicio) {
         cor[x] = 'b';
     }
 
+    printf("\n");
     Fdestroi(f);
     free(cor);
     free(d);
