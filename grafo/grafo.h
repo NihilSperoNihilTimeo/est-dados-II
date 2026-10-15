@@ -46,4 +46,7 @@ int GValfa(Grafo g, int aresta);
 int GVomega(Grafo g, int aresta);
 int GVvizinho(Grafo g, int aresta, int vertice);
 
+void removeVertice(Grafo g, int vertice);
+void removeAresta(Grafo g, int aresta);
+
 #endif

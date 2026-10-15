@@ -16,7 +16,7 @@ int main(void) {
     }
 
     // BEL(g, 1);
-    BEP(g);
+    BEP(g, 1);
 
     return 0;
 }

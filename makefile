@@ -14,7 +14,8 @@ OBJ_COMUM = fila/fila.o \
             lista/lista.o \
             pilha/pilha.o \
             algoritmos/BEL.o \
-			algoritmos/BEP.o
+			algoritmos/BEP.o \
+			algoritmos/CC.o
 
 # Objetos específicos de cada executável
 OBJ_MAIN = main.o $(OBJ_COMUM)
@@ -59,6 +60,12 @@ pilha/pilha.o: pilha/pilha.c pilha/pilha.h
 
 algoritmos/BEL.o: algoritmos/BEL.c algoritmos/algoritmos.h
 	$(CC) $(CFLAGS) -c algoritmos/BEL.c -o algoritmos/BEL.o
+
+algoritmos/BEP.o: algoritmos/BEP.c algoritmos/algoritmos.h
+	$(CC) $(CFLAGS) -c algoritmos/BEP.c -o algoritmos/BEP.o
+
+algoritmos/CC.o: algoritmos/CC.c algoritmos/algoritmos.h
+	$(CC) $(CFLAGS) -c algoritmos/CC.c -o algoritmos/CC.o
 
 # Limpeza dos ficheiros gerados
 clean:

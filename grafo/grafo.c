@@ -40,6 +40,40 @@ void  incrementaContadorVertices(Grafo g) {
     }
 }
 
+void  decrementaContadorVertices(Grafo g) {
+    void* dado = Lexamina(g->vertices[0].listaIncidencia, 1);
+    if (dado) {
+        int* contador = (int*) dado;
+        if (*contador > 0) {
+            (*contador)--; 
+        }
+    }
+}
+
+// Essa função foi desenvolvida para abrir a lista, buscar o valor que se deseja remover e liberar o valor sem deixar lixo de memória
+static void removeValorDaLista(Lista l, int valorBuscado) {
+    if (!l) {
+        return;
+    }     
+
+    int tamanho = Ltamanho(l);
+    void* ptrParaRemover = NULL;
+
+    for (int i = 1; i <= tamanho; i++) {
+        void* ptr = Lexamina(l, i);
+
+        if (ptr != NULL && *(int*)ptr == valorBuscado) {
+            ptrParaRemover = ptr;
+            break; 
+        }
+    }
+
+    if (ptrParaRemover != NULL) {
+        Lremove(l, ptrParaRemover); 
+        free(ptrParaRemover);      
+    }
+}
+
 void pulaLinha(FILE *f) {
     while (fgetc(f) != '\n' && !feof(f));
 }
@@ -576,4 +610,41 @@ int GVvizinho(Grafo g, int aresta, int vertice) {
     }
 
     return 0;
+}
+
+void removeVertice(Grafo g, int vertice) {
+    int a = GAprimaAresta(g, vertice);
+
+    while (a != 0) {
+        int prox = GAproxAresta(g, vertice, a); 
+        removeAresta(g, a); 
+        a = prox;
+    }
+
+    if (g->vertices[vertice].listaIncidencia) {
+        Ldestroi(g->vertices[vertice].listaIncidencia);
+        g->vertices[vertice].listaIncidencia = NULL;
+    }
+
+    int livre = g->vertices[0].livre;
+    g->vertices[vertice].livre = livre;
+    g->vertices[0].livre = vertice;
+
+    decrementaContadorVertices(g);
+
+}
+
+void removeAresta(Grafo g, int aresta) {
+    int saida = g->arestas[aresta].alfa;
+    int entrada = g->arestas[aresta].omega;
+
+    removeValorDaLista(g->vertices[saida].listaIncidencia, -aresta);
+    removeValorDaLista(g->vertices[entrada].listaIncidencia, +aresta);
+
+    int livre = g->arestas[0].omega;
+    g->arestas[aresta].omega = livre;
+    g->arestas[0].omega = aresta;
+
+    g->arestas[0].alfa--;
+
 }

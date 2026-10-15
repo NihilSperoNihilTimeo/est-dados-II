@@ -37,7 +37,7 @@ void BEP_visita(Grafo g, int u) {
     f[u] = tempo;
 }
 
-void BEP(Grafo g) {
+void BEP(Grafo g, int inicio) {
     int maxV = GInumeroVerticesMax(g); 
 
     cor = (char*) malloc((maxV + 1) * sizeof(char));
@@ -52,15 +52,11 @@ void BEP(Grafo g) {
 
     tempo = 0;
 
-    // Laço que percorre todas as árvores do grafo
-    for (int u = 1; u <= maxV; u++) {
-        if (GBexisteIdVertice(g, u) && cor[u] == 'w') {
-            printf("Árvore DFS iniciando em v%d: v%d", u, u);
-            BEP_visita(g, u);
-            printf("\n");
-        }
+    if (cor[inicio] == 'w') {
+        printf("v%d", inicio);
+        BEP_visita(g, inicio);
     }
-
+    
     printf("\n");
     free(cor);
     free(d);
