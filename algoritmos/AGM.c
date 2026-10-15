@@ -6,4 +6,3 @@
         Mateus Otacílio Silva Gomes - 0117242
 */  
 // AGM = Árvore Geradora Mínima com Algoritmo de Prim (ou MST - Minimum spanning tree)
-

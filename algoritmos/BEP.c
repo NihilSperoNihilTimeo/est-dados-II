@@ -26,9 +26,11 @@ void BEP_visita(Grafo g, int u) {
         int v = GVomega(g, a);
 
         if (cor[v] == 'w') {
-            printf(",a%d,v%d", a, v);
+            printf(",a%d,v%d", a, v);  // Indo
             pi[v] = u;
             BEP_visita(g, v);
+
+            printf(",a%d,v%d", a, u); // Voltando
         }
     }
     

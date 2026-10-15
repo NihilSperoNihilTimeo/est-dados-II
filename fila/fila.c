@@ -1,3 +1,10 @@
+/*
+    TAD Fila - Estrutura de dados II
+    
+    Grupo:
+        Rayane Kaylla Venâncio Gomes Alves - 0117243
+        Mateus Otacílio Silva Gomes - 0117242     
+*/  
 #include <stdlib.h>
 #include "fila.h"
 
@@ -87,17 +94,17 @@ void Finsere(Fila f, void *elemento) {
     novo->prox = NULL;
 
     if (f->qtd == 0) {
-        /* fila vazia: novo é o único nó */
         f->inicio = novo;
         f->fim = novo;
+        
     } else {
-        /* encaixa no fim e atualiza o ponteiro fim */
         f->fim->prox = novo;
         f->fim = novo;
     }
 
     f->qtd++;
 }
+
 void* Fremove(Fila f) {
     if (f == NULL) {
         return NULL;
@@ -112,7 +119,6 @@ void* Fremove(Fila f) {
     f->inicio = removido->prox;
 
     if (f->inicio == NULL) {
-        /* a fila ficou vazia: fim também deve apontar para NULL */
         f->fim = NULL;
     }
 
