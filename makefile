@@ -13,6 +13,7 @@ OBJ_COMUM = fila/fila.o \
             grafo/grafo.o \
             lista/lista.o \
             pilha/pilha.o \
+			algoritmos/AGM.o \
             algoritmos/BEL.o \
 			algoritmos/BEP.o \
 			algoritmos/CC.o
@@ -58,6 +59,9 @@ lista/lista.o: lista/lista.c lista/lista.h
 pilha/pilha.o: pilha/pilha.c pilha/pilha.h
 	$(CC) $(CFLAGS) -c pilha/pilha.c -o pilha/pilha.o
 
+algoritmos/AGM.o: algoritmos/AGM.c algoritmos/algoritmos.h
+	$(CC) $(CFLAGS) -c algoritmos/AGM.c -o algoritmos/AGM.o
+
 algoritmos/BEL.o: algoritmos/BEL.c algoritmos/algoritmos.h
 	$(CC) $(CFLAGS) -c algoritmos/BEL.c -o algoritmos/BEL.o
 
@@ -66,6 +70,7 @@ algoritmos/BEP.o: algoritmos/BEP.c algoritmos/algoritmos.h
 
 algoritmos/CC.o: algoritmos/CC.c algoritmos/algoritmos.h
 	$(CC) $(CFLAGS) -c algoritmos/CC.c -o algoritmos/CC.o
+
 
 # Limpeza dos ficheiros gerados
 clean:

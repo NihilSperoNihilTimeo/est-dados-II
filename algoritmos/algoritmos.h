@@ -4,6 +4,9 @@
 #include "grafo/grafo.h"
 #include "fila/fila.h"
 
+// Árvore geradora mínima, utilizando algoritmo de Prim (1)
+void AGM(Grafo g, float* pesos);
+
 // Busca em largura a partir de um vértice inicial (2)
 void BEL(Grafo g, int inicio);
 
