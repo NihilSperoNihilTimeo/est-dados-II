@@ -16,4 +16,7 @@ void BEP(Grafo g, int inicio);
 // Componentes conexos, utilizando BEP (5)
 void CC(Grafo g);
 
+// Caminho mais curto de a até b, utilizando algoritmo de Dijkstra (4)
+void CMC(Grafo g, float* pesos, int a, int b);
+
 #endif
