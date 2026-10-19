@@ -103,12 +103,12 @@ int GBexportaDot(Grafo g, const char *nome, int dirigido) {
 
 // Operações relacionadas ao grafo
 Grafo GGcriaGrafo(int v, int e) {
-    if (v <= 0 || e <= 0) {
+    if (v <= 0 || e < 0) {
         return NULL;
     }
 
     Vertice vetVertice = (Vertice) malloc((v + 1)*sizeof(struct vertice));
-    Aresta vetAresta =   (Aresta)  malloc((e + 1)*sizeof(struct aresta));
+    Aresta vetAresta   = (Aresta)  malloc((e + 1)*sizeof(struct aresta));
 
     Grafo g = (Grafo) malloc(sizeof(struct grafo)); 
 
@@ -129,6 +129,9 @@ Grafo GGcriaGrafo(int v, int e) {
     *contadorInicial = 0;
     Linsere(g->vertices[0].listaIncidencia, contadorInicial);
 
+    for (int i = 0; i <= e; i++) {
+        g->arestas[i].alfa = 0;
+    }
     for (int i = 0; i < e; i++) {
         g->arestas[i].omega = i + 1;
     }
@@ -386,24 +389,40 @@ Grafo GGcarregaGrafo(const char *nomeArquivo) {
 int GBsalvaGrafo(Grafo g, const char *nomeArquivo) {
     FILE *f = fopen(nomeArquivo, "w");
     if (f) {
+       int *mapaVertices = (int*) calloc((size_t)g->nvMax + 1, sizeof(int));
+       if (mapaVertices == NULL) {
+           fclose(f);
+           return 0;
+       }
+
+       int proximoId = 0;
+       for (int i = 1; i <= g->nvMax; i++) {
+           if (g->vertices[i].listaIncidencia) {
+               mapaVertices[i] = ++proximoId;
+           }
+       }
+
        fprintf(f, "graph g \n{\n");
        fprintf(f, "\t#nvMax %d\n", GInumeroVertices(g));
        fprintf(f, "\t#naMax %d\n", GInumeroArestas(g));
 
-       for (int i = 1; i <=g->nvMax; i++) {
+       for (int i = 1; i <= g->nvMax; i++) {
             if (g->vertices[i].listaIncidencia) {
-                fprintf(f, "\t%d;\n", i);
+                fprintf(f, "\t%d;\n", mapaVertices[i]);
             }
        }
 
-       for (int i = 1; i <=g->naMax; i++) {
+       for (int i = 1; i <= g->naMax; i++) {
             if (g->arestas[i].alfa) {
-                fprintf(f, "\t%d -- %d;\n", g->arestas[i].alfa, g->arestas[i].omega);
+                fprintf(f, "\t%d -- %d;\n",
+                        mapaVertices[g->arestas[i].alfa],
+                        mapaVertices[g->arestas[i].omega]);
             }
        }
 
        fprintf(f, "}\n");
 
+       free(mapaVertices);
        fclose(f);
        return 1;
 
@@ -644,6 +663,7 @@ void removeAresta(Grafo g, int aresta) {
     int livre = g->arestas[0].omega;
     g->arestas[aresta].omega = livre;
     g->arestas[0].omega = aresta;
+    g->arestas[aresta].alfa = 0;
 
     g->arestas[0].alfa--;
 

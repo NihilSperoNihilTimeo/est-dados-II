@@ -199,6 +199,6 @@ int main(void) {
         }
 
     } while (op != 6);
-    
+
     return 0;
 }

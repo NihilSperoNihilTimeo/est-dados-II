@@ -97,7 +97,9 @@ int main(void) {
                 break;
             }
 
-            if (!GBexisteIdVertice(g, v1) || !GBexisteIdVertice(g, v2)) {
+            if (v1 < 1 || v1 > GInumeroVerticesMax(g) ||
+                v2 < 1 || v2 > GInumeroVerticesMax(g) ||
+                !GBexisteIdVertice(g, v1) || !GBexisteIdVertice(g, v2)) {
                 printf("  Vértice inexistente. Use 1..%d\n", nv);
                 continue;
             }
@@ -110,6 +112,51 @@ int main(void) {
 
             printf("  Aresta %d criada: %d -> %d\n", a, v1, v2);
         }
+
+        int opcaoRemocao = 0;
+        do {
+            printf("\n=== Remover elementos do grafo ===\n");
+            printf("1. Remover vértice (e suas arestas incidentes)\n");
+            printf("2. Remover aresta\n");
+            printf("3. Continuar para salvar\n");
+            printf("Escolha uma opção: ");
+
+            if (scanf("%d", &opcaoRemocao) != 1) {
+                printf("Opção inválida.\n");
+                limpaEntrada();
+                continue;
+            }
+
+            if (opcaoRemocao == 1) {
+                int vertice;
+                printf("ID do vértice a remover: ");
+                if (scanf("%d", &vertice) != 1) {
+                    printf("ID inválido.\n");
+                    limpaEntrada();
+                } else if (vertice < 1 || vertice > GInumeroVerticesMax(g) ||
+                           !GBexisteIdVertice(g, vertice)) {
+                    printf("Vértice %d não existe no grafo.\n", vertice);
+                } else {
+                    removeVertice(g, vertice);
+                    printf("Vértice %d e suas arestas incidentes foram removidos.\n", vertice);
+                }
+            } else if (opcaoRemocao == 2) {
+                int aresta;
+                printf("ID da aresta a remover: ");
+                if (scanf("%d", &aresta) != 1) {
+                    printf("ID inválido.\n");
+                    limpaEntrada();
+                } else if (aresta < 1 || aresta > GInumeroArestasMax(g) ||
+                           !GBexisteIdAresta(g, aresta)) {
+                    printf("Aresta %d não existe no grafo.\n", aresta);
+                } else {
+                    removeAresta(g, aresta);
+                    printf("Aresta %d removida.\n", aresta);
+                }
+            } else if (opcaoRemocao != 3) {
+                printf("Opção inválida.\n");
+            }
+        } while (opcaoRemocao != 3);
 
         limpaEntrada();
 
